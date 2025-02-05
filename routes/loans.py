@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-import models, schemas, database, services
+import models, schemas, database, loan_calculations
 
 router = APIRouter(prefix="/loans", tags=["Loans"])
 
@@ -56,7 +56,7 @@ def get_loan_schedule(loan_id: int, db: Session = Depends(database.get_db)):
     loan = db.query(models.Loan).filter(models.Loan.id == loan_id).first()
     if not loan:
         raise HTTPException(status_code=404, detail="Loan not found")
-    return services.generate_amortization_schedule(loan.amount, loan.annual_interest_rate, loan.loan_term_months)
+    return loan_calculations.generate_amortization_schedule(loan.amount, loan.annual_interest_rate, loan.loan_term_months)
 
 
 @router.get("/{loan_id}/summary")
@@ -64,7 +64,7 @@ def get_loan_summary(loan_id: int, month: int, db: Session = Depends(database.ge
     loan = db.query(models.Loan).filter(models.Loan.id == loan_id).first()
     if not loan:
         raise HTTPException(status_code=404, detail="Loan not found")
-    return services.calculate_loan_summary(loan.amount, loan.annual_interest_rate, loan.loan_term_months, month)
+    return loan_calculations.calculate_loan_summary(loan.amount, loan.annual_interest_rate, loan.loan_term_months, month)
 
 
 @router.get("/user/{user_id}", response_model=list[schemas.LoanResponse])

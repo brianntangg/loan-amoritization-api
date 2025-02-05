@@ -1,7 +1,7 @@
 import uuid
 import pytest
 from fastapi import HTTPException
-from services import generate_amortization_schedule, calculate_loan_summary
+from loan_calculations import generate_amortization_schedule, calculate_loan_summary
 from fastapi.testclient import TestClient
 from main import app
 

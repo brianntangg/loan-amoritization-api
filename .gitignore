@@ -9,6 +9,9 @@ venv/
 __pycache__/
 *.py[cod]
 
+# Ignore SQLite database files
+*.db
+
 # Ignore environment variables and secrets
 .env
 *.env
